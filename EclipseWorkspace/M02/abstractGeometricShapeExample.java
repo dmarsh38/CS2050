@@ -24,6 +24,8 @@ public class abstractGeometricShapeExample
 
 		// Display rectangle
 		displayGeometricObject(geoObject2);
+		
+//		GeometricObject someGeoObject = new GeometricObject();
 	}
 
 	/** A method for comparing the areas of two geometric objects */

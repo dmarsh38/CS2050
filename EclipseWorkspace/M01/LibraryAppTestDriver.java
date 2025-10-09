@@ -26,18 +26,24 @@ public class LibraryAppTestDriver {
 	    
 	    // Print all books in the library
 	    myLibrary.printAllBooks();
+	    
 	}
 
 }
 
 
-class Book {
+abstract class Book {
 	// Book instance variables
 	private String author;
 	private String title;
 	private int pubYear;
 	
-	// Book constructor
+	/**
+	 * Book constructor
+	 * @param author
+	 * @param title
+	 * @param pubYear
+	 */
 	public Book(String author, String title, int pubYear) {
 		this.author = author;
 		this.title = title;
@@ -60,12 +66,37 @@ class Book {
 		return pubYear;
 	}
 	
-	public String stringOfBookDetails() {
+	@Override
+	public String toString() {
 		// return formatted string of book title, author, and year published
-		return "\"" + this.title + "\" by " + this.author + " (" + this.pubYear + ")";
+		return "\"" + title + "\" by " + author + " (" + pubYear + ")";
 	}
+	
+	
+	/**
+	 * final - cannot be overridden
+	 * @param daysLate
+	 * @return
+	 */
+	public final double calculateLateFee(int daysLate) {
+		double lateFee = 0;
+		if (daysLate > 0) {
+			lateFee = daysLate * getDailyLateFee();
+		}
+		return lateFee;
+	}
+
+	public abstract int getLoanDays();
+	
+	public abstract double getDailyLateFee();
+	
 }
 
+class PrintBook extends Book {
+	
+	public PrintBook() {
+	}
+}
 
 class Library {
 	private String name;
@@ -133,7 +164,7 @@ class Library {
 			return false;
 		}
 		if (isFull){
-			System.out.println("Library is full. Couldn't add " + book.stringOfBookDetails());
+			System.out.println("Library is full. Couldn't add " + book.toString());
 			return false;
 		}
 		// warn if there is not enough capacity on the shelf and move to next shelf
@@ -143,7 +174,7 @@ class Library {
 		}
 		
 		bookShelf[currentShelf][currentSlot] = book;
-		System.out.println("Added " + book.stringOfBookDetails() + " at shelf " + (currentShelf + 1) + ", slot "
+		System.out.println("Added " + book.toString() + " at shelf " + (currentShelf + 1) + ", slot "
 				+ (currentSlot + 1));
 		currentTotalBooks = currentTotalBooks + 1;
 
@@ -173,7 +204,7 @@ class Library {
 	            if (bookShelf[shelf][slot] != null) {
 	                hasBooks = true;
 	                System.out.println((shelf + 1) + (slot + 1) + ": " + 
-	                                 bookShelf[shelf][slot].stringOfBookDetails());
+	                                 bookShelf[shelf][slot].toString());
 	            }
 	        }
 	    }

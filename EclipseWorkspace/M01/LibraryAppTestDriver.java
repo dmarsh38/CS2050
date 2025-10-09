@@ -4,6 +4,7 @@
  * 
  */
 
+import java.util.Scanner;
 
 public class LibraryAppTestDriver {
 
@@ -11,7 +12,18 @@ public class LibraryAppTestDriver {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		Book book1 = new Book("Joy Buolamwini", "Unmasking AI", 2023);
+//  Null error - how to prevent this?  
+  Book nullBook = null;
+  System.out.println(nullBook.getTitle());
+
+  Scanner input = new Scanner(System.in);
+
+  System.out.print("Enter the year: ");
+  // read int from keyboard for year
+  int year = input.nextInt();
+//  Use .hasNextInt()!
+
+  Book book1 = new Book("Joy Buolamwini", "Unmasking AI", 2023);
 		Book book2 = new Book("Hannah Fry", "Hello World", 2018);
 		Book book3 = new Book("Ruha Benjamin", "Race After Technology", 2019);
 		

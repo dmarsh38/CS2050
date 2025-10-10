@@ -36,8 +36,8 @@ public class SelectionSortTDD
 	    {
 	    	if (array[i] < smallest) 
 	    	{
-	    		smallest = array[i]
-	    		int smallestIndex = i
+	    		smallest = array[i];
+	    		int smallestIndex = i;
 	    	}
 	    }
 		return array[smallestIndex];

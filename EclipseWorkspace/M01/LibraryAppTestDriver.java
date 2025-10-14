@@ -13,42 +13,66 @@ public class LibraryAppTestDriver {
 	 */
 	public static void main(String[] args) {
 //  Null error - how to prevent this?  
-  Book nullBook = null;
-  System.out.println(nullBook.getTitle());
-
-  Scanner input = new Scanner(System.in);
-
-  System.out.print("Enter the year: ");
-  // read int from keyboard for year
-  int year = input.nextInt();
-//  Use .hasNextInt()!
-
-  Book book1 = new Book("Joy Buolamwini", "Unmasking AI", 2023);
-		Book book2 = new Book("Hannah Fry", "Hello World", 2018);
-		Book book3 = new Book("Ruha Benjamin", "Race After Technology", 2019);
+		// --- unit test checks for Book ---
+		System.out.println("Unit Test Book Class");
+		Book unitTestBook = new PrintBook("Unmasking AI", "Joy Buolamwini", 2023);
 		
-//		book1.stringOfBookDetails();
-//		book2.stringOfBookDetails();
-
-	    // Create a library and add books
-	    Library myLibrary = new Library("Test Library", 3, 4);
-	    myLibrary.addBook(book1);
-	    myLibrary.addBook(book2);
-	    myLibrary.addBook(book3);
-	    
-	    // Print all books in the library
-	    myLibrary.printAllBooks();
+		System.out.println("getTitle():   " + unitTestBook.getTitle());
+		System.out.println("getAuthor():  " + unitTestBook.getAuthor());
+		System.out.println("getYear():    " + unitTestBook.getPubYear());
+		System.out.println("stringOfBookDetails():   " + unitTestBook.toString());
+		System.out.println();
+		System.out.println("Setting up Test Library");
+		int numberOfShelves = 3;
+		int shelfCapacity = 4;
+		System.out.println("Shelves (rows): " + numberOfShelves);
+		System.out.println("Slots per shelf (columns): " + shelfCapacity);
+		System.out.println("Total capacity: " + (numberOfShelves * shelfCapacity));
+		System.out.println();
+		Library library = new Library("Test Library", numberOfShelves, shelfCapacity);
+		library.displayCountPerShelf();
+		library.printAllBooks();
+		library.displayOldest();
+		// Row 0
+		library.addBook(null);
+		library.addBook(new EBook("Unmasking AI", "Joy Buolamwini", 2023));
+		library.addBook(new EBook("Hello World", "Hannah Fry", 2018));
+		library.addBook(new EBook("Race After Technology", "Ruha Benjamin", 2019));
+		library.addBook(new EBook("Deep Learning", "Ian Goodfellow", 2016));
+		library.displayCountPerShelf();
+		library.printAllBooks();
+		library.displayOldest();
+		// Row 1
+		library.addBook(new PrintBook("Algorithms to Live By", "Brian Christian", 2016));
+		library.addBook(new PrintBook("Weapons of Math Destruction", "Cathy O'Neil", 2016));
+		library.addBook(new PrintBook("The Mythical Man-Month", "Fred Brooks", 1975));
+		library.addBook(new PrintBook("Refactoring", "Martin Fowler", 1999));
+		// Row 2
+		library.addBook(new PrintBook("The Pragmatic Programmer", "Andrew Hunt & David Thomas", 1999));
+		library.addBook(new PrintBook("Peopleware", "Tom DeMarco & Tim Lister", 1987));
+		library.addBook(new PrintBook("Computer Lib / Dream Machines", "Ted Nelson", 1975));
+		library.displayCountPerShelf();
+		library.printAllBooks();
+		library.displayOldest();
+		System.out.println();
+		System.out.println("Test add more books than capacity...");
+		library.addBook(new EBook("Extra Title", "Extra Author", 2024)); // should trigger "full" message
+		library.displayCountPerShelf();
+		library.printAllBooks();
+		library.displayOldest();
 	    
 	}
 
 }
-
 
 abstract class Book {
 	// Book instance variables
 	private String author;
 	private String title;
 	private int pubYear;
+	
+	public Book() {
+	}
 	
 	/**
 	 * Book constructor
@@ -77,11 +101,28 @@ abstract class Book {
 		// returns year published
 		return pubYear;
 	}
+//	force subclasses to implement individual bookType getters
+	public abstract String getBookType();
 	
+//	setter methods
+	public void setAuthor(String author) {
+		this.author = author;
+	}
+	
+	public void setTitle(String title) {
+		this.title = title;
+	}
+	
+	public void setPubYear(int pubYear) {
+		this.pubYear = pubYear;
+	}
+	
+//	toString override to print book details:
 	@Override
 	public String toString() {
 		// return formatted string of book title, author, and year published
-		return "\"" + title + "\" by " + author + " (" + pubYear + ")";
+		return this.getBookType() + "\t\"" + title + "\" by " + author + " (" + pubYear + ") [" 
+				+ this.getLoanDays() + " days, $" + this.getDailyLateFee() + "/day]";
 	}
 	
 	
@@ -105,8 +146,52 @@ abstract class Book {
 }
 
 class PrintBook extends Book {
+	private static final String bookType = "PRINT"; 
 	
-	public PrintBook() {
+	public PrintBook(String title, String author, int pubYear) {
+		setTitle(title);
+		setAuthor(author);
+		setPubYear(pubYear);
+	}
+	
+	@Override
+	public String getBookType() {
+		return bookType;
+	}
+	
+	@Override
+	public int getLoanDays() {
+		return 21;
+	}
+	
+	@Override
+	public double getDailyLateFee() {
+		return 0.25;
+	}
+}
+
+class EBook extends Book {
+	private static final String bookType = "EBOOK"; 
+	
+	public EBook(String title, String author, int pubYear) {
+		setTitle(title);
+		setAuthor(author);
+		setPubYear(pubYear);
+	}
+	
+	@Override
+	public String getBookType() {
+		return bookType;
+	}
+	
+	@Override
+	public int getLoanDays() {
+		return 14;
+	}
+	
+	@Override
+	public double getDailyLateFee() {
+		return 0.10;
 	}
 }
 
@@ -201,33 +286,126 @@ class Library {
 		return true;
 	}
 
-	// nested for loop to iterate over the bookShelf object
-	public void printAllBooks() {
-		boolean hasBooks = false;
-		
-		System.out.println("All Books in Test Library");
-	    System.out.println("Shelf\tSlot\tBook Details");
-	    System.out.println("----------------------------");
-	    	    
-	    // Nested loop to iterate through all shelves and slots
-	    for (int shelf = 0; shelf < bookShelf.length; shelf++) {
-	        for (int slot = 0; slot < bookShelf[shelf].length; slot++) {
-	            // Check if there's a book in this position
-	            if (bookShelf[shelf][slot] != null) {
-	                hasBooks = true;
-	                System.out.println((shelf + 1) + (slot + 1) + ": " + 
-	                                 bookShelf[shelf][slot].toString());
-	            }
-	        }
-	    }
-	    
-	    // If no books were found, display appropriate message
-	    if (!hasBooks) {
-	        System.out.println("No books in the library.");
-	    }
-	    
-	    System.out.println("Total books: " + currentTotalBooks);
+	/**
+	* Prints the number of books on each shelf and returns the total.
+	*
+	* @return total number of books across all shelves
+	*/
+	public void displayCountPerShelf()
+	{
+		int fullRows = currentTotalBooks / shelfCapacity;
+		int remainder = currentTotalBooks % shelfCapacity;
+		for (int rowIndex = 0; rowIndex < numberOfShelves; rowIndex++)
+		{
+			int booksOnThisShelf;
+			if (rowIndex < fullRows)
+			{
+				booksOnThisShelf = shelfCapacity;
+			} else if (rowIndex == fullRows)
+			{
+				booksOnThisShelf = remainder;
+			} else
+			{
+				booksOnThisShelf = 0;
+			}
+			System.out.println("Shelf " + (rowIndex + 1) + " has " + booksOnThisShelf + " books");
+		}
+	}
+
+	/**
+	* @param shelf      an array of Book objects for one shelf
+	* @param shelfIndex shelf number  and not array index number
+	*/
+	private void printListofBooks(Book[] shelf, int shelfIndex)
+	{
+		for (int columnIndex = 0; columnIndex < shelf.length; columnIndex++)
+		{
+			Book currentBook = shelf[columnIndex];
+			if (currentBook != null)
+			{
+				System.out.printf("%5d\t%5d\t%s \n", shelfIndex,
+						columnIndex + 1, currentBook.toString());
+			}
+		}
 	}
 	
+	/**
+	* Prints all books in the library by calling printShelf for each shelf.
+	*/
+	public void printAllBooks() {
+		System.out.println("------------------------------------------------------------");
+		System.out.println("All books in " + getName());
+		System.out.println("\nShelf\tSlot\tBook Type\tBook Details");
+		System.out.println("------------------------------------------------------------");
+
+	    // If no books were found, display appropriate message
+
+		for (int rowIndex = 0; rowIndex < numberOfShelves; rowIndex++) {
+			// Reuse helper method for each shelf (row)
+			printListofBooks(bookShelf[rowIndex], rowIndex + 1);
+		}
+		System.out.println();
+		System.out.println("(" + currentTotalBooks + " of " + (numberOfShelves * shelfCapacity) + " slots filled)\n");
+	}
+	
+	/**
+	* Converts all currently stored books into a  1D array.
+	*
+	* @return Book[] containing exactly the books in the library, in order added.
+	*/
+	private Book[] convertToOneDimension()
+	{
+		Book[] oneDimension = new Book[currentTotalBooks];
+		int index = 0;
+		for (int shelfIndex = 0; shelfIndex < numberOfShelves; shelfIndex++)
+		{
+			for (int slotIndex = 0; slotIndex < shelfCapacity; slotIndex++)
+			{
+				if (bookShelf[shelfIndex][slotIndex] != null)
+				{
+					oneDimension[index] = bookShelf[shelfIndex][slotIndex];
+					index = index + 1;
+					if (index >= currentTotalBooks)
+					{
+						// early exit once all books copied
+						return oneDimension;
+					}
+				}
+			}
+		}
+		return oneDimension;
+	}
+	
+	public void displayOldest()
+	{
+		Book[] allBooks = convertToOneDimension();
+		if (allBooks.length == 0)
+		{
+			System.out.println("Display Oldest: Library is empty.");
+			return;
+		}
+		// Pass 1: find min year
+		int earliestYear = allBooks[0].getPubYear();
+		for (int i = 1; i < allBooks.length; i++)
+		{
+			if (allBooks[i].getPubYear() < earliestYear)
+			{
+				earliestYear = allBooks[i].getPubYear();
+			}
+		}
+		// Pass 2: print all matches
+		System.out.println("------------------------------------------------------------");
+		System.out.println("Oldest books in " + getName());
+		System.out.println("Earliest publication year: " + earliestYear);
+		System.out.println();
+		for (int i = 0; i < allBooks.length; i++)
+		{
+			if (allBooks[i].getPubYear() == earliestYear)
+			{
+				System.out.println(allBooks[i].toString());
+			}
+		}
+	}
+
 	
 }

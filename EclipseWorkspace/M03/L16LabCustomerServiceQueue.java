@@ -115,4 +115,55 @@ public class L16LabCustomerServiceQueue
     }
 }
 
+class Customer {
+	private String name;
+	private String issueType;
+	
+	public Customer(String name, String issueType) {
+		this.name = name;
+		this.issueType = issueType;
+	}
+	
+	@Override
+	public String toString() {
+		return "Name: " + name + "\nIssue Type: " + issueType;
+	}
+}
 
+class CustomerQueue {
+	private ArrayList<Customer> queue; // Internal storage for queue elements
+	// Constructor initializes an empty queue
+	public CustomerQueue()
+	{
+		queue = new ArrayList<>();
+	}
+	
+	public void enqueue(Customer customer) {
+		queue.add(customer);
+	}
+	
+	public Customer dequeue() {
+		if (!queue.isEmpty()) {
+			return queue.remove(0);
+		}
+		throw new IllegalStateException("Queue is empty.");
+	}
+	
+	public Customer peek() {
+		if (!queue.isEmpty()) {
+			return queue.get(0);
+		}
+		throw new IllegalStateException("Queue is empty.");
+	}
+	
+	public Customer isEmpty() {
+		return queue.isEmpty();
+	}
+	
+	public void displayQueue() {
+		// use for loop to iterate over array
+		for (int cust = 0; cust < queue.length; cust++) {
+//			do some stuff
+		}
+	}
+}

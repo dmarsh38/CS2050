@@ -15,7 +15,7 @@ public class LibraryAppTestDriver {
 //  Null error - how to prevent this?  
 		// --- unit test checks for Book ---
 		System.out.println("Unit Test Book Class");
-		Book unitTestBook = new PrintBook("Unmasking AI", "Joy Buolamwini", 2023);
+		Book unitTestBook; = new PrintBook("Unmasking AI", "Joy Buolamwini", 2023);
 		
 		System.out.println("getTitle():   " + unitTestBook.getTitle());
 		System.out.println("getAuthor():  " + unitTestBook.getAuthor());
@@ -62,7 +62,6 @@ public class LibraryAppTestDriver {
 		library.displayOldest();
 	    
 	}
-
 }
 
 abstract class Book {
@@ -138,7 +137,7 @@ abstract class Book {
 		}
 		return lateFee;
 	}
-
+// abstract classes must be implemented by sub-class
 	public abstract int getLoanDays();
 	
 	public abstract double getDailyLateFee();
@@ -147,7 +146,7 @@ abstract class Book {
 
 class PrintBook extends Book {
 	private static final String bookType = "PRINT"; 
-	
+//	has its own constructor which implements the parent class methods
 	public PrintBook(String title, String author, int pubYear) {
 		setTitle(title);
 		setAuthor(author);
@@ -163,7 +162,7 @@ class PrintBook extends Book {
 	public int getLoanDays() {
 		return 21;
 	}
-	
+//	overrides the empty method in the parent class
 	@Override
 	public double getDailyLateFee() {
 		return 0.25;

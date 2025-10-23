@@ -82,15 +82,12 @@ public class SortAnalysis
 		return comparisons;
 	}
 
-	public static int insertionSortCount(int[] a)
-	{
+	public static int insertionSortCount(int[] a) {
 		int comparisons = 0;
-		for (int i = 1; i < a.length; i++)
-		{
+		for (int i = 1; i < a.length; i++) {
 			int key = a[i];
 			int j = i - 1;
-			while (j >= 0 && a[j] > key)
-			{
+			while (j >= 0 && a[j] > key) {
 				comparisons++; // counted when condition true
 				a[j + 1] = a[j];
 				j--;

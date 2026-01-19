@@ -136,6 +136,7 @@ class CustomerQueue {
 	public CustomerQueue()
 	{
 		queue = new ArrayList<>();
+//		queue.
 	}
 	
 	public void enqueue(Customer customer) {
@@ -156,13 +157,13 @@ class CustomerQueue {
 		throw new IllegalStateException("Queue is empty.");
 	}
 	
-	public Customer isEmpty() {
+	public boolean isEmpty() {
 		return queue.isEmpty();
 	}
 	
 	public void displayQueue() {
 		// use for loop to iterate over array
-		for (int cust = 0; cust < queue.length; cust++) {
+		for (int cust = 0; cust < queue.size(); cust++) {
 //			do some stuff
 		}
 	}

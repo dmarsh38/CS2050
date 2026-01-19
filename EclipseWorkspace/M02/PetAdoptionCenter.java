@@ -24,6 +24,8 @@ public class PetAdoptionCenter
 		// Add some example pets
 		// pets.add(new Bulldog("Bear"));
 		// pets.add(new Cat("Mittens"));
+		pets.add(new Parrot("Dingus", "pecans"));
+		pets.add(new GoldFish("Bingus", "weird flakes"));
 
 		// Task 1: Add at least TWO more Pet types/objects to the list.
 		// a) Create a new Pet class (e.g., Parrot, Goldfish, Gecko).
@@ -114,4 +116,73 @@ public class PetAdoptionCenter
 	// TODO: create new ArrayList<Pet> favorites; add matches; return favorites
 
 //	}
+}
+
+interface Pet {
+	public abstract void beFriendly();
+	
+	public abstract void play();
+}
+
+abstract class Animal {
+	private String name;
+	
+	public Animal(String name) {
+		this.name = name;
+	}
+	
+	public String getName() {
+		return name;
+	}
+	
+	public abstract void eat();
+	
+	@Override
+	public String toString() {
+		return "Animal name: " + name;
+	}
+}
+
+class GoldFish extends Animal implements Pet {
+//	private String name;
+	private String food;
+	
+	public GoldFish(String name, String food) {
+		super(name);
+		this.food = food; 
+	}
+	
+	public void beFriendly() {
+		System.out.println("Your goldfish, " + super.getName() + ", kissed the glass!");
+	}
+	
+	public void play() {
+		System.out.println(super.getName() + " the goldfish is swimming in circles.");
+	}
+	
+	public void eat() {
+		System.out.println(super.getName() + " the goldfish nibbles " + food);
+	}
+}
+
+class Parrot extends Animal implements Pet {
+//	private String name;
+	private String food;
+	
+	public Parrot(String name, String food) {
+		super(name);
+		this.food = food; 
+	}
+	
+	public void beFriendly() {
+		System.out.println("Your parrot, " + super.getName() + ", said 'I love you.'");
+	}
+	
+	public void play() {
+		System.out.println(super.getName() + " the parrot flew onto your arm.");
+	}
+	
+	public void eat() {
+		System.out.println(super.getName() + " the parrot is crunching " + food);
+	}
 }

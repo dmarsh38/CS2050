@@ -39,16 +39,19 @@ class SinglyLinkedListFix
 
 	public void insertNode(int number)
 	{
+//		create new node, current and previous references
 		NodeFix newNode = new NodeFix(number);
 		NodeFix current = head;
 		NodeFix previous = null;
-
+//		iterate if current has data in it and that data is less than parameter 
 		while (current != null && current.data < number)
 		{
+//			assign previous node with the current node
 			previous = current;
+//			move to next node
 			current = current.next;
 		}
-
+//		if no previous node exists
 		if (previous == null)
 		{
 			newNode.next = head;
@@ -62,9 +65,10 @@ class SinglyLinkedListFix
 
 	public void deleteNode(int number)
 	{
+//		save previous and current
 		NodeFix current = head;
 		NodeFix previous = null;
-
+//		while loop only stops when number param is unequal
 		while (current.next != null && current.data != number)
 		{
 			previous = current;
@@ -76,7 +80,7 @@ class SinglyLinkedListFix
 			head = current.next;
 		} else
 		{
-			previous.next = null; // Bug #5: Should be previous.next = current.next
+			previous.next = current.next; // Bug #5: Should be previous.next = current.next
 		}
 	}
 

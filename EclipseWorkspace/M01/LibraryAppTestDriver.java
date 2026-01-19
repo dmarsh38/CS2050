@@ -15,7 +15,7 @@ public class LibraryAppTestDriver {
 //  Null error - how to prevent this?  
 		// --- unit test checks for Book ---
 		System.out.println("Unit Test Book Class");
-		Book unitTestBook; = new PrintBook("Unmasking AI", "Joy Buolamwini", 2023);
+		Book unitTestBook = new PrintBook("Unmasking AI", "Joy Buolamwini", 2023);
 		
 		System.out.println("getTitle():   " + unitTestBook.getTitle());
 		System.out.println("getAuthor():  " + unitTestBook.getAuthor());
@@ -173,9 +173,7 @@ class EBook extends Book {
 	private static final String bookType = "EBOOK"; 
 	
 	public EBook(String title, String author, int pubYear) {
-		setTitle(title);
-		setAuthor(author);
-		setPubYear(pubYear);
+		super(title, author, pubYear);
 	}
 	
 	@Override
@@ -407,4 +405,59 @@ class Library {
 	}
 
 	
+}
+
+class LibraryLoader {
+	public static void loadFromCsv(Library library, String filename) {
+	    try (Scanner fileScan = new Scanner(new File(filename))) {
+			int lineNumber = 0;
+			while (fileScan.hasNextLine()){
+				String line = fileScan.nextLine();
+				lineNumber++;
+				Book parsed = parseBookLine(line, lineNumber);
+				if (parsed != null) {
+				     boolean added = library.addBook(parsed);
+				     if (!added) {
+					System.out.println("Line " + lineNumber + ": library full or invalid book.");
+					}
+				}
+			}
+	    } catch (FileNotFoundException ex){
+			System.out.println("Could not open file: " + filename);
+	     }
+	}
+	/**
+	* Parses one CSV line into a Book or returns null if invalid. Expected:
+	* title,author,year,type (type = P or E) Keeps logic simple for lecture.
+	*/
+	private static Book parseBookLine(String line, int lineNumber){
+		if (line == null){
+			System.out.println("Line " + lineNumber + ": empty line.");
+			return null; // early return
+		}
+		String[] parts = line.split(",");
+		if (parts.length != 4){
+		      System.out.println("Line " + lineNumber + ": wrong number of fields → " + line);
+		      return null; // early return
+		}
+		String title = parts[0].trim();
+		String author = parts[1].trim();
+		String yearText = parts[2].trim();
+		String type = parts[3].trim();
+		int year;
+		try{
+			year = Integer.parseInt(yearText);
+		} catch (NumberFormatException ex){
+		     System.out.println("Line " + lineNumber + ": invalid year \"" + yearText + "\" → skipping line.");
+		     return null; // early return
+		}
+		if (type.equalsIgnoreCase("P")){
+			return new PrintBook(title, author, year);
+		} else if (type.equalsIgnoreCase("E")){
+			return new EBook(title, author, year);
+		} else{
+		     System.out.println("Line " + lineNumber + ": invalid type \"" + type + "\" (use P or E).");
+		     return null; // early return
+		}
+	}
 }
